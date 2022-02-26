@@ -1,0 +1,45 @@
+.loader{
+    position: relative;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(45deg, transparent, transparent 40%, #03a8f4);
+    animation: animate 2s linear infinite;
+    margin: 0 auto;
+}
+
+@keyframes animate{
+    0%{
+        transform: rotate(0deg);
+    }
+
+    100%{
+        transform: rotate(360deg);
+    }
+}
+
+.loader::before{
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    right: 2px;
+    bottom: 2px;
+    background: #202020;
+    border-radius: 50%;
+    z-index: 1000;
+}
+
+.loader::after{
+    content: '';
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    background: linear-gradient(45deg, transparent, transparent 40%, #03a8f4);
+    border-radius: 50%;
+    z-index: 1000;
+    z-index: 1;
+    filter: blur(30px);
+}
