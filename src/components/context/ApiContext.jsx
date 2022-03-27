@@ -7,6 +7,9 @@ export const ApiContext = React.createContext();
 export const ApiProvider = ({ children }) => {
   const apiKey = import.meta.env.VITE_API_KEY;
 
+  
+//Use state hooks
+  const [welcomeMessage, setWelcomeMessage] = useState(true)
   const [metar, setMetar] = useState([]);
   const [copySuccess, setCopySuccess] = useState(false);
   const [search, setSearch] = useState("");
@@ -14,14 +17,17 @@ export const ApiProvider = ({ children }) => {
   const [error, setError] = useState(false);
 
 
+  //API uri
   const url = `https://api.checkwx.com/metar/${search}/decoded/?x-api-key=`;
 
-
+//Handles inputs
   const handleChange = (e) => {
     const { name, value } = e.target;
 
     setSearch((prevState) => ({ ...prevState, [name]: value }));
   };
+
+  //Make sure data exists before returning desired icon
 
   const handleIcon = (symbol, styles) => {
     if (!metar.icao) return;
@@ -42,7 +48,6 @@ export const ApiProvider = ({ children }) => {
     try {
       await navigator.clipboard.writeText(copy);
       setCopySuccess(true);
-      console.log(copySuccess)
     } catch (err) {
       console.log(err)
     }
@@ -50,12 +55,15 @@ export const ApiProvider = ({ children }) => {
 
   const handleOnKeyPress = (e) => e.key === "Enter" && getMetar(url);
 
-
+//Checks if whether an api value is not undefined
   const checkApiValue = (value) => {
     return value !== undefined ? value : "Unavailable";
   };
 
+
+//Main API fetch function
   const getMetar = async (url) => {
+    setWelcomeMessage(false)
     setLoading(true);
     setError(false);
     await axios
@@ -75,19 +83,14 @@ export const ApiProvider = ({ children }) => {
     setLoading(false);
   };
 
-  const checkData = (...queries) => {
-    if(!metar.icao) return;
-
-    return (metar?.[queries])
-  }
-
+  //Handles cloud data 
   const checkClouds = (prop) => {
     if (!metar?.clouds || metar?.clouds[0]?.code === "OVX")
       return "Unavailable";
 
     return checkApiValue(metar?.clouds[0]?.[prop]);
   };
-
+//Handles wind data
   const checkWind = () => {
     if (!metar?.wind) return "Unavailable";
 
@@ -99,6 +102,7 @@ export const ApiProvider = ({ children }) => {
   }`;
   };
 
+//Marquee text
   const airportObject = {
     klax: "Los Angeles Int. Airport",
     kjfk: "John F. Kennedy Airport",
@@ -121,16 +125,17 @@ export const ApiProvider = ({ children }) => {
         handleIcon,
         search,
         copySuccess,
+        welcomeMessage,
         setSearch,
         getMetar,
         airportObject,
         checkWind,
         checkClouds,
-        checkData,
         handleChange,
         handleOnKeyPress,
         handleCopy,
         checkApiValue,
+        url
       }}
     >
       {children}

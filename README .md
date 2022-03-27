@@ -50,7 +50,7 @@ The flight category is what decided whether I was allowed to fly or not on that 
 Clone the project
 
 ```bash
-  git clone https://link-to-project
+  git clone https://github.com/samukelolukhele/liima
 ```
 
 Go to the project directory

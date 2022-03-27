@@ -14,10 +14,11 @@ function App() {
     handleOnKeyPress,
     handleCopy,
     copySuccess,
+    welcomeMessage,
     error,
     getMetar,
     setSearch,
-    search,
+    url,
     metar,
     handleIcon,
     checkWind,
@@ -26,6 +27,7 @@ function App() {
     airportObject,
   } = useContext(ApiContext);
 
+  const [help, setHelp] = useState(false);
 
   const sampleAirports = Object.entries(airportObject).map(([key, value]) => {
     return (
@@ -48,6 +50,7 @@ function App() {
           LIIMA
         </h1>
 
+        {/* Main data display */}
         <div className="max-w-screen-md h-max w-11/12 mb-auto flex flex-col p-6 bg-[rgba(36,36,36,0.9)] rounded-2xl">
           <div
             className={`flex flex-row justify-between text-gray-500 text-sm mb-3 w-11/12 mx-auto ${
@@ -62,6 +65,7 @@ function App() {
             </p>
           </div>
           <div className="flex flex-row justify-between w-11/12 mx-auto">
+            {/* Search Container */}
             <div className="w-8/12 md:w-9/12 flex flex-col">
               <input
                 className="placeholder:text-[0.40rem] placeholder:my-auto md:placeholder:text-xs rounded-2xl w-full py-1 pl-4"
@@ -155,7 +159,6 @@ function App() {
               {checkApiValue(metar.flight_category)}
             </p>
           </div>
-
           <div
             onClick={() => handleCopy(checkApiValue(metar.raw_text))}
             className={`relative h-max w-11/12 mx-auto rounded-lg bg-[#111111] p-3 flex items-center justify-center cursor-pointer ${
@@ -168,6 +171,24 @@ function App() {
               "text-[5rem] mx-2 md:text-2xl md:top-50 right-2 text-gray-500"
             )}
           </div>
+          {welcomeMessage && (
+            <div className="w-full flex flex-col justify-center items-center px-8">
+              <div
+                className="p-2 my-2 rounded-full bg-[#111111]"
+                onMouseOver={() => setHelp(true)}
+              >
+                <Icon symbol="unknown" />
+              </div>
+              {help && (
+                <p className="text-center font-light text-sm leading-5 p-4 bg-[#111111] rounded-lg">
+                  To find the metar you are looking for just enter the four
+                  letter ICAO code of the desired airport. You can find the ICAO
+                  codes, for many of the major international airports, below.
+                  Happy flying!
+                </p>
+              )}
+            </div>
+          )}
           {copySuccess && <Message>Metar copied to clipboard!</Message>}
           {loading && <Loading />}
           {error && (
